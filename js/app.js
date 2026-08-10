@@ -73,6 +73,21 @@ const answerButtons =
         "answerButtons"
     );
 
+const hintBtn =
+    document.getElementById(
+        "hintBtn"
+    );
+
+const hintCount =
+    document.getElementById(
+        "hintCount"
+    );
+
+const hintText =
+    document.getElementById(
+        "hintText"
+    );
+
 const liveStatus =
     document.getElementById(
         "liveStatus"
@@ -265,6 +280,19 @@ gameBackBtn.addEventListener(
         destroyPeer();
         roomCode = "";
         showScreen(lobbyScreen);
+    }
+);
+
+/* ==========================================
+GAME HINTS
+========================================== */
+
+hintBtn.addEventListener(
+    "click",
+    () => {
+        if (typeof revealHint === "function") {
+            revealHint();
+        }
     }
 );
 

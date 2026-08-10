@@ -16,6 +16,8 @@ let currentQuoteIndex = null;
 
 let localAnswer = null;
 let remoteAnswer = null;
+let hasHint = false;
+let hintUses = 3;
 
 let gameStarted = false;
 let resultShown = false;
@@ -37,6 +39,8 @@ function resetGameState() {
 
     localAnswer = null;
     remoteAnswer = null;
+    hasHint = false;
+    hintUses = 3;
 
     gameStarted = false;
     resultShown = false;
@@ -44,6 +48,7 @@ function resetGameState() {
     clearTimeout(roundTimer);
 
     updateScoreboard();
+    updateHintDisplay();
 
 }
 
@@ -99,9 +104,10 @@ function renderQuote() {
 
     roundNumber.textContent = currentRound;
     quoteText.textContent = currentQuote.phrase;
-    quoteReference.textContent = currentQuote.reference;
+    quoteReference.textContent = hasHint ? currentQuote.reference : "";
 
     renderAnswers(currentQuote.options);
+    updateHintDisplay();
 
 }
 
@@ -118,6 +124,7 @@ function renderAnswers(options) {
         const button = document.createElement("button");
         button.className = "answer";
         button.textContent = option;
+        button.disabled = false;
         button.addEventListener("click", () => submitAnswer(option, button));
         answerButtons.appendChild(button);
     });
@@ -282,6 +289,24 @@ function playAgain() {
         liveStatus.textContent = "Chichy's is choosing your next adventure... ❤️";
     }
 
+}
+
+function revealHint() {
+    if (hintUses <= 0) return;
+    if (hasHint) return;
+
+    hasHint = true;
+    hintUses -= 1;
+
+    hintText.textContent = currentQuote ? `Verse hint: ${currentQuote.reference}` : "";
+    quoteReference.textContent = currentQuote ? currentQuote.reference : "";
+    updateHintDisplay();
+}
+
+function updateHintDisplay() {
+    hintCount.textContent = hintUses;
+    hintBtn.disabled = hintUses <= 0 || hasHint;
+    hintText.style.display = hasHint ? "block" : "none";
 }
 
 /* ==========================================

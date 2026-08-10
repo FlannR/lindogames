@@ -83,12 +83,11 @@ function setupConnection(conn) {
         }
     };
 
+    connection.on("data", message => handleMessage(message));
     connection.on("open", onOpen);
     if (connection.open) {
         onOpen();
     }
-
-    connection.on("data", message => handleMessage(message));
 
     connection.on("close", () => {
         setConnectionStatus(false);
@@ -209,24 +208,39 @@ function handleMessage(message) {
                 currentRound = message.round || currentRound;
                 currentQuoteIndex = message.quoteIndex;
                 currentQuote = QUOTES[currentQuoteIndex];
+                localAnswer = null;
+                remoteAnswer = null;
+                hasHint = false;
+                quoteReference.textContent = "";
+                hintText.textContent = "";
                 renderQuote();
                 liveStatus.textContent = "Choose your answer ❤️";
+                updateHintDisplay();
                 updateScoreboard();
+                document.querySelectorAll(".answer").forEach(btn => btn.disabled = false);
             }
             break;
 
         case "ANSWER":
             if (isChichys) {
-                remoteAnswer = message.answer;
-                evaluateRoundIfReady();
+                if (message.round === currentRound) {
+                    remoteAnswer = message.answer;
+                    evaluateRoundIfReady();
+                } else {
+                    console.warn(`Ignored ANSWER for round ${message.round}; current round is ${currentRound}.`);
+                }
             }
             break;
 
         case "ROUND_RESULT":
-            chichyScore = message.chichyScore;
-            allInAllScore = message.allInAllScore;
-            updateScoreboard();
-            showRoundResult(message.correctAnswer, message.chichyCorrect, message.allInAllCorrect);
+            if (message.round === currentRound) {
+                chichyScore = message.chichyScore;
+                allInAllScore = message.allInAllScore;
+                updateScoreboard();
+                showRoundResult(message.correctAnswer, message.chichyCorrect, message.allInAllCorrect);
+            } else {
+                console.warn(`Skipped ROUND_RESULT for round ${message.round}; current round is ${currentRound}.`);
+            }
             break;
 
         case "GAME_OVER":
