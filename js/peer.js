@@ -67,7 +67,7 @@ SETUP CONNECTION
 function setupConnection(conn) {
     connection = conn;
 
-    connection.on("open", () => {
+    const onOpen = () => {
         setConnectionStatus(true);
         showToast(`Connected! ${remotePlayerName()} is here ❤️`);
 
@@ -80,7 +80,12 @@ function setupConnection(conn) {
             showScreen(gameScreen);
             liveStatus.textContent = "Chichy's is getting the first quote ready... ❤️";
         }
-    });
+    };
+
+    connection.on("open", onOpen);
+    if (connection.open) {
+        onOpen();
+    }
 
     connection.on("data", message => handleMessage(message));
 
