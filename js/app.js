@@ -254,6 +254,21 @@ cancelRoomBtn.addEventListener(
 );
 
 /* ==========================================
+GAME BACK NAVIGATION
+========================================== */
+
+const gameBackBtn = document.getElementById("gameBackBtn");
+
+gameBackBtn.addEventListener(
+    "click",
+    () => {
+        destroyPeer();
+        roomCode = "";
+        showScreen(lobbyScreen);
+    }
+);
+
+/* ==========================================
 PLAY AGAIN
 ========================================== */
 

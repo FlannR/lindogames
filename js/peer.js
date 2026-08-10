@@ -67,17 +67,18 @@ SETUP CONNECTION
 function setupConnection(conn) {
     connection = conn;
 
+    // Move to the game screen as soon as the data connection exists.
+    showScreen(gameScreen);
+
     const onOpen = () => {
         setConnectionStatus(true);
         showToast(`Connected! ${remotePlayerName()} is here ❤️`);
 
         if (isChichys) {
-            showScreen(gameScreen);
             resetGameState();
             sendMessage({ type: "GAME_START" });
             startGameAsHost();
         } else {
-            showScreen(gameScreen);
             liveStatus.textContent = "Chichy's is getting the first quote ready... ❤️";
         }
     };
@@ -130,7 +131,12 @@ function createHostPeer() {
         console.log("Chichy's room ready:", id);
     });
 
-    peer.on("connection", conn => setupConnection(conn));
+    peer.on("connection", conn => {
+        setupConnection(conn);
+        if (isChichys && !gameStarted) {
+            showScreen(gameScreen);
+        }
+    });
 
     peer.on("error", error => {
         console.error("Peer error:", error);
