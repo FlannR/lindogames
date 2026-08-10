@@ -72,6 +72,7 @@ function setupConnection(conn) {
         showToast(`Connected! ${remotePlayerName()} is here ❤️`);
 
         if (isChichys) {
+            showScreen(gameScreen);
             resetGameState();
             sendMessage({ type: "GAME_START" });
             startGameAsHost();
@@ -178,6 +179,63 @@ function connectToHost() {
         setTimeout(() => showScreen(lobbyScreen), 1200);
     });
 
+}
+
+function handleMessage(message) {
+    if (!message || typeof message.type !== "string") return;
+
+    switch (message.type) {
+        case "GAME_START":
+            if (!isChichys) {
+                resetGameState();
+                showScreen(gameScreen);
+                liveStatus.textContent = "Chichy's is getting the first quote ready... ❤️";
+            }
+            break;
+
+        case "ROUND":
+            if (!isChichys) {
+                currentRound = message.round || currentRound;
+                currentQuoteIndex = message.quoteIndex;
+                currentQuote = QUOTES[currentQuoteIndex];
+                renderQuote();
+                liveStatus.textContent = "Choose your answer ❤️";
+                updateScoreboard();
+            }
+            break;
+
+        case "ANSWER":
+            if (isChichys) {
+                remoteAnswer = message.answer;
+                evaluateRoundIfReady();
+            }
+            break;
+
+        case "ROUND_RESULT":
+            chichyScore = message.chichyScore;
+            allInAllScore = message.allInAllScore;
+            updateScoreboard();
+            showRoundResult(message.correctAnswer, message.chichyCorrect, message.allInAllCorrect);
+            break;
+
+        case "GAME_OVER":
+            chichyScore = message.chichyScore;
+            allInAllScore = message.allInAllScore;
+            updateScoreboard();
+            showResultScreen();
+            break;
+
+        case "PLAY_AGAIN":
+            if (!isChichys) {
+                resetGameState();
+                showScreen(gameScreen);
+                liveStatus.textContent = "Chichy's is choosing your next adventure... ❤️";
+            }
+            break;
+
+        default:
+            console.warn("Unknown message type:", message.type);
+    }
 }
 
 /* ==========================================

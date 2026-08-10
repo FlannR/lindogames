@@ -1,309 +1,270 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-```
-<title>LINDO for eternity</title>
+    <title>LINDO for eternity</title>
 
-<meta
-    name="description"
-    content="LINDO for eternity — a romantic Bible quote guessing game for Mcklin & Chido."
->
+    <meta name="description" content="LINDO for eternity">
 
-<meta name="theme-color" content="#fff4f5">
+    <meta name="theme-color" content="#fff4f5">
 
-<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 
-<!-- PeerJS -->
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-```
+    <!-- PeerJS -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 </head>
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-```
-<div class="hearts" id="hearts"></div>
+        <div class="hearts" id="hearts"></div>
 
-<div class="connection-dot" id="connectionDot"></div>
+        <div class="connection-dot" id="connectionDot"></div>
 
-<header>
-    <div class="brand">
-        LINDO
-        <span class="brand-heart">♥</span>
-        for eternity
+        <header>
+            <div class="brand">
+                LINDO
+                <span class="brand-heart">♥</span>
+                for eternity
+            </div>
+
+            <div class="tagline">
+                Mcklin & Chido — one love, one story, forever.
+            </div>
+        </header>
+
+        <main>
+
+            <!-- ================= LOBBY ================= -->
+
+            <section class="screen" id="lobbyScreen">
+
+                <div class="card intro">
+
+                    <div class="intro-symbol">💍</div>
+
+                    <h1>
+                        A little game for<br>
+                        two hearts.
+                    </h1>
+
+                    <p>
+                        A Bible quote guessing game made especially for
+                        <span class="names">Mcklin & Chido</span>.
+                        Guess together, laugh together, and maybe discover
+                        who knows the Bible and each other best. ❤️
+                    </p>
+
+                    <button class="btn btn-primary" id="createRoomBtn">
+                        Start Game as Chichy's
+                    </button>
+
+                    <div class="divider">
+                        or join your love
+                    </div>
+
+                    <div class="join-form">
+
+                        <input id="roomInput" class="input" type="text" inputmode="numeric" maxlength="4"
+                            placeholder="ROOM CODE" autocomplete="off">
+
+                        <button class="btn btn-secondary" id="joinRoomBtn">
+                            Join Chichy's as All_in_All
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= WAITING ================= -->
+
+            <section class="screen hidden" id="waitingScreen">
+
+                <div class="card waiting">
+
+                    <div class="intro-symbol">💗</div>
+
+                    <h1>Almost together...</h1>
+
+                    <p>
+                        Share this room code with
+                        <strong>All_in_All</strong>.
+                    </p>
+
+                    <div class="room-code" id="roomCodeDisplay">
+                        ----
+                    </div>
+
+                    <p>
+                        <span class="pulse"></span>
+                        Waiting for All_in_All to join...
+                    </p>
+
+                    <button class="btn btn-secondary" id="cancelRoomBtn">
+                        Back
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= GAME ================= -->
+
+            <section class="screen hidden" id="gameScreen">
+
+                <div class="game-top">
+
+                    <div class="round-pill">
+                        Round
+                        <span id="roundNumber">1</span>/10
+                    </div>
+
+                    <div class="scores">
+
+                        <div class="score">
+                            Chichy's
+                            <strong id="chichyScore">0</strong>
+                        </div>
+
+                        <div class="score">
+                            All_in_All
+                            <strong id="allInAllScore">0</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card quote-card">
+
+                    <div class="quote-mark">
+                        “
+                    </div>
+
+                    <div class="quote" id="quoteText">
+                        Preparing your quote...
+                    </div>
+
+                    <div class="reference" id="quoteReference">
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="speaker-question">
+                        Who said it?
+                    </div>
+
+                    <div class="answers" id="answerButtons">
+                    </div>
+
+                    <div class="live-status" id="liveStatus">
+                        Choose your answer ❤️
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= RESULT ================= -->
+
+            <section class="screen hidden" id="resultScreen">
+
+                <div class="card result">
+
+                    <div class="celebration">
+                        💕💍✨
+                    </div>
+
+                    <h1>
+                        TOGETHER WE WIN!<br>
+                        WE WILL GET MARRIED! ❤️💍
+                    </h1>
+
+                    <p class="result-message" id="resultMessage">
+                        A perfect match!
+                    </p>
+
+                    <div class="final-score">
+
+                        <div class="final-player">
+
+                            <span class="name">
+                                Chichy's
+                            </span>
+
+                            <span class="number" id="finalChichyScore">
+                                0
+                            </span>
+
+                        </div>
+
+                        <div class="versus">
+                            ♡
+                        </div>
+
+                        <div class="final-player">
+
+                            <span class="name">
+                                All_in_All
+                            </span>
+
+                            <span class="number" id="finalAllInAllScore">
+                                0
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-primary" id="playAgainBtn">
+                        Play Again Together ❤️
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <div class="celebration-layer" id="celebrationLayer">
+        </div>
+
+
+        <div class="toast" id="toast">
+        </div>
+        ```
+
     </div>
 
-    <div class="tagline">
-        Mcklin & Chido — one love, one story, forever.
-    </div>
-</header>
+    <!-- Application JavaScript -->
 
-<main>
+    <script src="js/qoutes.js"></script>
 
-    <!-- ================= LOBBY ================= -->
+    <script src="js/bible.js"></script>
 
-    <section class="screen" id="lobbyScreen">
+    <script src="js/peer.js"></script>
 
-        <div class="card intro">
+    <script src="js/game.js"></script>
 
-            <div class="intro-symbol">💍</div>
-
-            <h1>
-                A little game for<br>
-                two hearts.
-            </h1>
-
-            <p>
-                A Bible quote guessing game made especially for
-                <span class="names">Mcklin & Chido</span>.
-                Guess together, laugh together, and maybe discover
-                who knows the Bible — and each other — best. ❤️
-            </p>
-
-            <button
-                class="btn btn-primary"
-                id="createRoomBtn">
-                Start Game as Chichy's
-            </button>
-
-            <div class="divider">
-                or join your love
-            </div>
-
-            <div class="join-form">
-
-                <input
-                    id="roomInput"
-                    class="input"
-                    type="text"
-                    inputmode="numeric"
-                    maxlength="4"
-                    placeholder="ROOM CODE"
-                    autocomplete="off"
-                >
-
-                <button
-                    class="btn btn-secondary"
-                    id="joinRoomBtn">
-                    Join Chichy's as All_in_All
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= WAITING ================= -->
-
-    <section class="screen hidden" id="waitingScreen">
-
-        <div class="card waiting">
-
-            <div class="intro-symbol">💗</div>
-
-            <h1>Almost together...</h1>
-
-            <p>
-                Share this room code with
-                <strong>All_in_All</strong>.
-            </p>
-
-            <div
-                class="room-code"
-                id="roomCodeDisplay">
-                ----
-            </div>
-
-            <p>
-                <span class="pulse"></span>
-                Waiting for All_in_All to join...
-            </p>
-
-            <button
-                class="btn btn-secondary"
-                id="cancelRoomBtn">
-                Back
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= GAME ================= -->
-
-    <section class="screen hidden" id="gameScreen">
-
-        <div class="game-top">
-
-            <div class="round-pill">
-                Round
-                <span id="roundNumber">1</span>/10
-            </div>
-
-            <div class="scores">
-
-                <div class="score">
-                    Chichy's
-                    <strong id="chichyScore">0</strong>
-                </div>
-
-                <div class="score">
-                    All_in_All
-                    <strong id="allInAllScore">0</strong>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card quote-card">
-
-            <div class="quote-mark">
-                “
-            </div>
-
-            <div
-                class="quote"
-                id="quoteText">
-                Preparing your quote...
-            </div>
-
-            <div
-                class="reference"
-                id="quoteReference">
-                —
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="speaker-question">
-                Who said it?
-            </div>
-
-            <div
-                class="answers"
-                id="answerButtons">
-            </div>
-
-            <div
-                class="live-status"
-                id="liveStatus">
-                Choose your answer ❤️
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= RESULT ================= -->
-
-    <section class="screen hidden" id="resultScreen">
-
-        <div class="card result">
-
-            <div class="celebration">
-                💕💍✨
-            </div>
-
-            <h1>
-                TOGETHER WE WIN!<br>
-                WE WILL GET MARRIED! ❤️💍
-            </h1>
-
-            <p
-                class="result-message"
-                id="resultMessage">
-                A perfect match!
-            </p>
-
-            <div class="final-score">
-
-                <div class="final-player">
-
-                    <span class="name">
-                        Chichy's
-                    </span>
-
-                    <span
-                        class="number"
-                        id="finalChichyScore">
-                        0
-                    </span>
-
-                </div>
-
-                <div class="versus">
-                    ♡
-                </div>
-
-                <div class="final-player">
-
-                    <span class="name">
-                        All_in_All
-                    </span>
-
-                    <span
-                        class="number"
-                        id="finalAllInAllScore">
-                        0
-                    </span>
-
-                </div>
-
-            </div>
-
-            <button
-                class="btn btn-primary"
-                id="playAgainBtn">
-                Play Again Together ❤️
-            </button>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-<div
-    class="celebration-layer"
-    id="celebrationLayer">
-</div>
-
-
-<div
-    class="toast"
-    id="toast">
-</div>
-```
-
-</div>
-
-<!-- Application JavaScript -->
-
-<script src="js/quotes.js"></script>
-
-<script src="js/bible.js"></script>
-
-<script src="js/peer.js"></script>
-
-<script src="js/game.js"></script>
-
-<script src="js/app.js"></script>
+    <script src="js/app.js"></script>
 
 </body>
+
 </html>
