@@ -93,6 +93,11 @@ async function nextRound() {
     localAnswer = null;
     remoteAnswer = null;
 
+    if (!Array.isArray(QUOTES) || QUOTES.length === 0) {
+        showToast("No quotes available. Please add quotes to js/qoutes.js");
+        return;
+    }
+
     currentQuoteIndex = Math.floor(Math.random() * QUOTES.length);
     currentQuote = QUOTES[currentQuoteIndex];
 

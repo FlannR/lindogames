@@ -207,7 +207,11 @@ function handleMessage(message) {
             if (!isChichys) {
                 currentRound = message.round || currentRound;
                 currentQuoteIndex = message.quoteIndex;
-                currentQuote = QUOTES[currentQuoteIndex];
+                currentQuote = (Array.isArray(QUOTES) && QUOTES.length > currentQuoteIndex) ? QUOTES[currentQuoteIndex] : null;
+                if (!currentQuote) {
+                    showToast("Quote not found for this room. Ensure both devices use the same js/qoutes.js");
+                    return;
+                }
                 localAnswer = null;
                 remoteAnswer = null;
                 hasHint = false;
