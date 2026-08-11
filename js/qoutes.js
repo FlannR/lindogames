@@ -178,27 +178,42 @@ const BOOKS = [
     "Revelation"
 ];
 
-function shuffle(array) {
-    const copy = [...array];
-    for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
+function deterministicOptions(speaker, index) {
+    const wrongPool = AUTHORS.filter(name => name !== speaker);
+    const wrongOptions = [];
+    let pointer = index % wrongPool.length;
+
+    while (wrongOptions.length < 3) {
+        const choice = wrongPool[pointer % wrongPool.length];
+        if (!wrongOptions.includes(choice)) {
+            wrongOptions.push(choice);
+        }
+        pointer += 7;
     }
-    return copy;
+
+    const order = [0, 1, 2, 3];
+    const seed = index % 13;
+    for (let i = order.length - 1; i > 0; i--) {
+        const j = (seed + i * 5) % (i + 1);
+        [order[i], order[j]] = [order[j], order[i]];
+    }
+
+    const baseOptions = [speaker, ...wrongOptions];
+    return order.map(pos => baseOptions[pos]);
 }
 
 function generateLocalQuotes(count) {
     const quotes = [];
 
     for (let i = 0; i < count; i++) {
-        const speaker = AUTHORS[i % AUTHORS.length];
-        const phrase = BASE_PHRASES[i % BASE_PHRASES.length];
+        const source = BASE_QUOTES[i % BASE_QUOTES.length];
+        const phrase = source.phrase;
+        const speaker = source.speaker;
         const book = BOOKS[i % BOOKS.length];
         const chapter = 1 + ((i * 7) % 50);
         const verse = 1 + ((i * 13) % 30);
 
-        const wrongAuthors = shuffle(AUTHORS.filter(name => name !== speaker)).slice(0, 3);
-        const options = shuffle([speaker, ...wrongAuthors]);
+        const options = deterministicOptions(speaker, i);
 
         quotes.push({
             reference: `${book} ${chapter}:${verse}`,
