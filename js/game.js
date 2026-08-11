@@ -6,6 +6,17 @@
 
 const TOTAL_ROUNDS = 10;
 
+const GAME_OVER_MESSAGES = [
+    "We will get married! We are the light of the world.",
+    "We will get married! Our love shines in His name.",
+    "We will get married! United by grace and truth.",
+    "We will get married! Blessed together in Christ.",
+    "We will get married! One heart, one faith, one future.",
+    "We will get married! His light guides our love.",
+    "We will get married! Forever together in His glory.",
+    "We will get married! Two hearts walking in faith."
+];
+
 let currentRound = 0;
 
 let chichyScore = 0;
@@ -211,6 +222,8 @@ function showRoundResult(
     allInAllCorrect
 ) {
     document.querySelectorAll(".answer").forEach(button => {
+        button.disabled = true;
+
         if (button.textContent === correctAnswer) {
             button.classList.remove("selected");
             button.classList.add("correct");
@@ -265,9 +278,14 @@ function showResultScreen() {
         resultMessage.textContent = "A perfect match! Mcklin and Chido are completely in sync!";
     }
 
+    resultMessage.textContent = getRandomEndMessage();
     showScreen(resultScreen);
     launchCelebration();
 
+}
+
+function getRandomEndMessage() {
+    return GAME_OVER_MESSAGES[Math.floor(Math.random() * GAME_OVER_MESSAGES.length)];
 }
 
 /* ==========================================
