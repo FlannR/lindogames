@@ -80,7 +80,7 @@ function startGameAsHost() {
 NEXT ROUND
 ========================================== */
 
-function nextRound() {
+async function nextRound() {
     if (!isChichys) return;
 
     if (currentRound >= TOTAL_ROUNDS) {
@@ -98,7 +98,11 @@ function nextRound() {
 
     renderQuote();
 
-    sendMessage({ type: "ROUND", round: currentRound, quoteIndex: currentQuoteIndex });
+    sendMessage({
+        type: "ROUND",
+        round: currentRound,
+        quoteIndex: currentQuoteIndex
+    });
 
     liveStatus.textContent = "Choose your answer ❤️";
 
